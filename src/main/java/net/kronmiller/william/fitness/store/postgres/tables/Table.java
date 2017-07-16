@@ -1,7 +1,9 @@
 package net.kronmiller.william.fitness.store.postgres.tables;
 
+import net.kronmiller.william.fitness.exceptions.AppException;
 import net.kronmiller.william.fitness.store.postgres.DatabaseReference;
 
+import javax.validation.constraints.NotNull;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -12,16 +14,16 @@ public abstract class Table {
     protected final String tableName;
     protected final DatabaseReference database;
     protected abstract String getSchema();
-    protected void init() throws SQLException {
+    public void init() throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS " +
                 tableName +
                 getSchema();
         PreparedStatement preparedStatement = this.database.prepareStatement(query);
         preparedStatement.execute();
+        this.database.commit();
     }
-    protected Table(String tableName, DatabaseReference database) throws SQLException {
+    protected Table(@NotNull String tableName, @NotNull DatabaseReference database) throws SQLException {
         this.tableName = tableName;
         this.database = database;
-        init();
     }
 }

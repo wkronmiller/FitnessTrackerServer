@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 public class AppProperties {
     private String name;
     public String getName() {
-        System.out.println("Getting name: " + name);
         return this.name;
     }
     public void setName(String name) {

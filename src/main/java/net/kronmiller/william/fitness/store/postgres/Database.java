@@ -10,16 +10,23 @@ import java.sql.*;
  */
 public abstract class Database implements DataStore {
     private final Connection connection;
-    protected Database(PostgresProperties postgresProperties) throws SQLException {
-        this.connection = DriverManager.getConnection(postgresProperties.getUrl(),
-                postgresProperties.getUsername(),
-                postgresProperties.getPassword());
+    protected Database(PostgresProperties postgresProperties) throws SQLException, ClassNotFoundException {
+        // Load JDBC Driver
+        Class.forName("org.postgresql.Driver");
+        System.out.println("------------DRIVER LOADED-----------");
+        final String url = postgresProperties.getUrl();
+        System.out.println("Connecting to URL: " + url);
+        this.connection = DriverManager.getConnection(url, postgresProperties.getUsername(), postgresProperties.getPassword());
+        this.connection.setAutoCommit(false);
     }
     PreparedStatement prepareStatement(String query) throws SQLException {
         return connection.prepareStatement(query);
     }
     void commit() throws SQLException {
         connection.commit();
+    }
+    void rollBack() throws SQLException {
+        connection.rollback();
     }
     protected DatabaseReference getReference() {
         return new DatabaseReference(this);

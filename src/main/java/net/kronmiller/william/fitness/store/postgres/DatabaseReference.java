@@ -18,4 +18,7 @@ public class DatabaseReference {
     public void commit() throws SQLException {
         this.database.commit();
     }
+    public void rollBack() throws SQLException {
+        this.database.rollBack();
+    }
 }
